@@ -52,9 +52,9 @@ export default function WorkerApplicationsPage() {
       // Get worker profile
       const { data: workerProfile, error: profileError } = await supabase
         .from("worker_profiles")
-        .select("id")
+        .select("id" as never)
         .eq("user_id", user.id)
-        .single()
+        .single() as { data: { id: string } | null; error: any }
 
       if (profileError || !workerProfile) {
         toast.error("找不到师傅信息")

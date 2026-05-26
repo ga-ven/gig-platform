@@ -59,9 +59,9 @@ export default function JobDetailPage() {
           employer_profiles (
             company_name
           )
-        `)
+        ` as never)
         .eq("id", params.id as string)
-        .single()
+        .single() as { data: JobPost | null; error: any }
 
       if (error) {
         toast.error(error.message)
@@ -82,18 +82,18 @@ export default function JobDetailPage() {
     try {
       const { data: workerProfile } = await supabase
         .from("worker_profiles")
-        .select("id")
+        .select("id" as never)
         .eq("user_id", user.id)
-        .single()
+        .single() as { data: { id: string } | null }
 
       if (!workerProfile) return
 
       const { data } = await supabase
         .from("job_applications")
-        .select("id, status")
+        .select("id, status" as never)
         .eq("job_id", params.id as string)
         .eq("worker_id", workerProfile.id)
-        .single()
+        .single() as { data: { id: string; status: string } | null }
 
       if (data) {
         setHasApplied(true)
@@ -116,9 +116,9 @@ export default function JobDetailPage() {
       // Get worker profile
       const { data: workerProfile, error: profileError } = await supabase
         .from("worker_profiles")
-        .select("id")
+        .select("id" as never)
         .eq("user_id", user.id)
-        .single()
+        .single() as { data: { id: string } | null; error: any }
 
       if (profileError || !workerProfile) {
         toast.error("找不到师傅信息，请重新注册")
@@ -131,7 +131,7 @@ export default function JobDetailPage() {
         job_id: params.id as string,
         worker_id: workerProfile.id,
         status: "pending",
-      })
+      } as never) as { error: any }
 
       if (error) {
         if (error.code === "23505") {

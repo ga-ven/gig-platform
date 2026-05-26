@@ -66,9 +66,9 @@ export default function NewJobPage() {
       // Get employer profile
       const { data: employerProfile, error: profileError } = await supabase
         .from("employer_profiles")
-        .select("id")
+        .select("id" as never)
         .eq("user_id", user.id)
-        .single()
+        .single() as { data: { id: string } | null; error: any }
 
       if (profileError || !employerProfile) {
         toast.error("找不到雇主信息，请重新注册")
@@ -77,7 +77,7 @@ export default function NewJobPage() {
       }
 
       // Create job post
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("job_posts")
         .insert({
           employer_id: employerProfile.id,
@@ -89,9 +89,7 @@ export default function NewJobPage() {
           job_time_start: formData.job_time_start || null,
           job_time_end: formData.job_time_end || null,
           status: "pending",
-        })
-        .select()
-        .single()
+        } as never) as { error: any }
 
       if (error) {
         toast.error(error.message)

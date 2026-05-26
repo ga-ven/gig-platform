@@ -6,13 +6,11 @@ export async function POST(request: Request) {
     const supabase = await createClient()
     const { job_id, rating, comment } = await request.json()
 
-    // Get current user
     const { data: { user }, error: userError } = await supabase.auth.getUser()
     if (userError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Determine if user is employer or worker
     const { data: employerProfile } = await supabase
       .from('employer_profiles')
       .select('id')
@@ -23,10 +21,8 @@ export async function POST(request: Request) {
     let reviewee_id: string | null = null
 
     if (employerProfile) {
-      // Employer is reviewing worker
-      reviewer_id = employerProfile.id
+      reviewer_id = (employerProfile as { id: string }).id
       
-      // Get the worker who did the job
       const { data: job } = await supabase
         .from('job_posts')
         .select(`
@@ -34,12 +30,13 @@ export async function POST(request: Request) {
             worker_id,
             status
           )
-        `)
+        ` as never)
         .eq('id', job_id)
-        .eq('employer_id', employerProfile.id)
+        .eq('employer_id', (employerProfile as { id: string }).id)
         .single()
 
-      const acceptedApplication = job?.job_applications?.find(
+      const typedJob = job as any
+      const acceptedApplication = typedJob?.job_applications?.find(
         (app: any) => app.status === 'accepted'
       )
 
@@ -47,7 +44,6 @@ export async function POST(request: Request) {
         reviewee_id = acceptedApplication.worker_id
       }
     } else {
-      // Worker is reviewing employer
       const { data: workerProfile } = await supabase
         .from('worker_profiles')
         .select('id')
@@ -55,9 +51,8 @@ export async function POST(request: Request) {
         .single()
 
       if (workerProfile) {
-        reviewer_id = workerProfile.id
+        reviewer_id = (workerProfile as { id: string }).id
         
-        // Get the employer
         const { data: job } = await supabase
           .from('job_posts')
           .select('employer_id')
@@ -65,7 +60,7 @@ export async function POST(request: Request) {
           .single()
 
         if (job) {
-          reviewee_id = job.employer_id
+          reviewee_id = (job as { employer_id: string }).employer_id
         }
       }
     }
@@ -74,14 +69,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid review context' }, { status: 400 })
     }
 
-    // Create review
     const { error } = await supabase.from('reviews').insert({
       job_id,
       reviewer_id,
       reviewee_id,
       rating,
       comment,
-    })
+    } as never)
 
     if (error) {
       if (error.code === '23505') {

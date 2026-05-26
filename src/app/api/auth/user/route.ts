@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 
+interface CustomUser {
+  id: string
+  username: string
+  role: string
+  email?: string
+}
+
 export async function GET() {
   try {
     const cookieStore = await cookies()
@@ -17,7 +24,6 @@ export async function GET() {
     try {
       const session = JSON.parse(Buffer.from(sessionToken, 'base64').toString())
       
-      // Check if token is expired
       if (session.exp < Date.now()) {
         return NextResponse.json(
           { user: null },
@@ -25,7 +31,6 @@ export async function GET() {
         )
       }
 
-      // Get fresh user data from database
       const supabase = await createClient()
       const { data: user } = await supabase
         .from('custom_users')
@@ -40,11 +45,13 @@ export async function GET() {
         )
       }
 
+      const typedUser = user as CustomUser
+
       return NextResponse.json({
         user: {
-          id: user.id,
-          username: user.username,
-          role: user.role,
+          id: typedUser.id,
+          username: typedUser.username,
+          role: typedUser.role,
         }
       })
 

@@ -52,7 +52,7 @@ export default function DiagnosePage() {
     // Check 2: Supabase Connection
     try {
       const supabase = createClient()
-      const { data, error } = await supabase.from(' employer_profiles').select('id').limit(1)
+      const { data, error } = await supabase.from(' employer_profiles').select('id' as never).limit(1) as { data: any; error: any }
       
       if (error) {
         if (error.message.includes('does not exist')) {

@@ -39,36 +39,36 @@ export default function ReviewPage() {
       // Get user profile
       const { data: employerProfile } = await supabase
         .from('employer_profiles')
-        .select('id')
+        .select('id' as never)
         .eq('user_id', user!.id)
-        .single()
+        .single() as { data: { id: string } | null }
 
       const profileId = employerProfile?.id
 
       if (!profileId) {
         const { data: workerProfile } = await supabase
           .from('worker_profiles')
-          .select('id')
+          .select('id' as never)
           .eq('user_id', user!.id)
-          .single()
+          .single() as { data: { id: string } | null }
 
         if (workerProfile) {
           const { data } = await supabase
             .from('reviews')
-            .select('id')
+            .select('id' as never)
             .eq('job_id', params.id as string)
             .eq('reviewer_id', workerProfile.id)
-            .single()
+            .single() as { data: { id: string } | null }
 
           if (data) setHasReviewed(true)
         }
       } else {
         const { data } = await supabase
           .from('reviews')
-          .select('id')
+          .select('id' as never)
           .eq('job_id', params.id as string)
           .eq('reviewer_id', profileId!)
-          .single()
+          .single() as { data: { id: string } | null }
 
         if (data) setHasReviewed(true)
       }

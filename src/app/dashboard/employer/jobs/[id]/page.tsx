@@ -86,9 +86,9 @@ export default function JobDetailPage() {
               )
             )
           )
-        `)
+        ` as never)
         .eq("id", params.id as string)
-        .single()
+        .single() as { data: JobPost | null; error: any }
 
       if (error) {
         toast.error(error.message)
@@ -109,8 +109,8 @@ export default function JobDetailPage() {
       // Update application status
       const { error: appError } = await supabase
         .from("job_applications")
-        .update({ status: "accepted" })
-        .eq("id", applicationId)
+        .update({ status: "accepted" } as never)
+        .eq("id", applicationId) as { error: any }
 
       if (appError) {
         toast.error(appError.message)
@@ -120,8 +120,8 @@ export default function JobDetailPage() {
       // Update job status
       const { error: jobError } = await supabase
         .from("job_posts")
-        .update({ status: "accepted" })
-        .eq("id", params.id as string)
+        .update({ status: "accepted" } as never)
+        .eq("id", params.id as string) as { error: any }
 
       if (jobError) {
         toast.error(jobError.message)
@@ -136,7 +136,7 @@ export default function JobDetailPage() {
       if (otherApplications && otherApplications.length > 0) {
         await supabase
           .from("job_applications")
-          .update({ status: "rejected" })
+          .update({ status: "rejected" } as never)
           .eq("job_id", params.id as string)
           .neq("id", applicationId)
       }
@@ -155,8 +155,8 @@ export default function JobDetailPage() {
     try {
       const { error } = await supabase
         .from("job_applications")
-        .update({ status: "rejected" })
-        .eq("id", applicationId)
+        .update({ status: "rejected" } as never)
+        .eq("id", applicationId) as { error: any }
 
       if (error) {
         toast.error(error.message)

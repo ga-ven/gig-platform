@@ -37,8 +37,8 @@ export default function PaymentPage() {
       // In production, this would call WeChat Pay API
       const { error } = await supabase
         .from('transactions')
-        .update({ status: 'completed' })
-        .eq('id', params.transaction_id as string)
+        .update({ status: 'completed' } as never)
+        .eq('id', params.transaction_id as string) as { error: any }
 
       if (error) {
         setPaymentStatus('failed')
@@ -47,7 +47,7 @@ export default function PaymentPage() {
         // Update job status
         await supabase
           .from('job_posts')
-          .update({ status: 'completed' })
+          .update({ status: 'completed' } as never)
           .eq('id', params.id as string)
 
         setPaymentStatus('success')

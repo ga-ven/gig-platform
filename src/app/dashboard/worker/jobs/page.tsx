@@ -58,9 +58,9 @@ export default function WorkerJobsPage() {
           employer_profiles (
             company_name
           )
-        `)
+        ` as never)
         .eq("status", "pending")
-        .order("created_at", { ascending: false })
+        .order("created_at", { ascending: false }) as { data: JobPost[] | null; error: any }
 
       if (error) {
         toast.error(error.message)

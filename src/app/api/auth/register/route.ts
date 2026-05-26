@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+interface NewUser {
+  id: string
+  username: string
+  role: string
+  email: string
+}
+
 export async function POST(request: Request) {
   try {
     const { username, password, role, email } = await request.json()
@@ -28,7 +35,6 @@ export async function POST(request: Request) {
 
     const supabase = await createClient()
 
-    // Check if username already exists
     const { data: existingUser } = await supabase
       .from('custom_users')
       .select('id')
@@ -42,10 +48,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // Hash password (simple hash for MVP - in production use bcrypt)
     const passwordHash = Buffer.from(password).toString('base64')
 
-    // Create user in custom_users table
     const { data: newUser, error: insertError } = await supabase
       .from('custom_users')
       .insert({
@@ -53,7 +57,7 @@ export async function POST(request: Request) {
         password: passwordHash,
         email: email || `${username}@local.com`,
         role,
-      })
+      } as never)
       .select()
       .single()
 
@@ -64,24 +68,21 @@ export async function POST(request: Request) {
       )
     }
 
-    // Also create profile based on role
-    const { error: profileError } = await supabase
+    const typedNewUser = newUser as NewUser
+
+    await supabase
       .from(role === 'employer' ? 'employer_profiles' : 'worker_profiles')
       .insert({
-        user_id: newUser.id,
+        user_id: typedNewUser.id,
         company_name: username,
-      })
-
-    if (profileError) {
-      console.error('Profile creation error:', profileError)
-    }
+      } as never)
 
     return NextResponse.json({
       success: true,
       user: {
-        id: newUser.id,
-        username: newUser.username,
-        role: newUser.role,
+        id: typedNewUser.id,
+        username: typedNewUser.username,
+        role: typedNewUser.role,
       }
     })
 

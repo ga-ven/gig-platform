@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+interface CustomUser {
+  id: string
+  username: string
+  password: string
+  role: string
+  created_at: string
+}
+
 export async function POST(request: Request) {
   try {
     const { username, password } = await request.json()
@@ -14,7 +22,6 @@ export async function POST(request: Request) {
 
     const supabase = await createClient()
 
-    // Find user by username
     const { data: user, error: findError } = await supabase
       .from('custom_users')
       .select('*')
@@ -28,29 +35,29 @@ export async function POST(request: Request) {
       )
     }
 
-    // Verify password
+    const typedUser = user as CustomUser
+
     const passwordHash = Buffer.from(password).toString('base64')
-    if (user.password !== passwordHash) {
+    if (typedUser.password !== passwordHash) {
       return NextResponse.json(
         { error: '用户名或密码错误' },
         { status: 401 }
       )
     }
 
-    // Create a session token (simple JWT-like token for MVP)
     const sessionToken = Buffer.from(JSON.stringify({
-      user_id: user.id,
-      username: user.username,
-      role: user.role,
-      exp: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 days
+      user_id: typedUser.id,
+      username: typedUser.username,
+      role: typedUser.role,
+      exp: Date.now() + 7 * 24 * 60 * 60 * 1000
     })).toString('base64')
 
     const response = NextResponse.json({
       success: true,
       user: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
+        id: typedUser.id,
+        username: typedUser.username,
+        role: typedUser.role,
       }
     })
 

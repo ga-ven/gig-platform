@@ -54,24 +54,23 @@ export default function EmployerJobsPage() {
       // Get employer profile
       const { data: employerProfile, error: profileError } = await supabase
         .from("employer_profiles")
-        .select("id")
+        .select("id" as never)
         .eq("user_id", user.id)
-        .single()
+        .single() as { data: { id: string } | null; error: any }
 
       if (profileError || !employerProfile) {
         toast.error("找不到雇主信息")
         return
       }
 
-      // Fetch jobs with application counts
       const { data, error } = await supabase
         .from("job_posts")
         .select(`
           *,
           job_applications (id, status)
-        `)
+        ` as never)
         .eq("employer_id", employerProfile.id)
-        .order("created_at", { ascending: false })
+        .order("created_at", { ascending: false }) as { data: JobPost[] | null; error: any }
 
       if (error) {
         toast.error(error.message)

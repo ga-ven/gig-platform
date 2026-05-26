@@ -11,17 +11,15 @@ export async function POST(request: Request) {
 
     const supabase = await createClient()
 
-    // Update transaction status
     const { error } = await supabase
       .from('transactions')
-      .update({ status })
+      .update({ status } as never)
       .eq('id', transaction_id)
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // If payment is completed, update job status to completed
     if (status === 'completed') {
       const { data: transaction } = await supabase
         .from('transactions')
@@ -32,8 +30,8 @@ export async function POST(request: Request) {
       if (transaction) {
         await supabase
           .from('job_posts')
-          .update({ status: 'completed' })
-          .eq('id', transaction.job_id)
+          .update({ status: 'completed' } as never)
+          .eq('id', (transaction as { job_id: string }).job_id)
       }
     }
 
