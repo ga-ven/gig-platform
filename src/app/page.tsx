@@ -2,12 +2,119 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Play, Database, Users, Shield, ArrowRight, CheckCircle, Zap, FileText, ExternalLink } from "lucide-react"
+import { Play, Users, Briefcase, Shield, Star, ArrowRight, MapPin, Clock, MessageCircle } from "lucide-react"
+
+const mockJobs = [
+  {
+    id: "1",
+    title: "急需搬家师傅",
+    description: "从朝阳区搬到海淀区，约3箱物品，需要帮忙搬运下楼",
+    location: "朝阳区",
+    pay_amount: 300,
+    required_skills: ["搬家", "体力活"],
+    job_time_start: "2024-01-15",
+    employer_name: "李先生",
+  },
+  {
+    id: "2",
+    title: "水管维修",
+    description: "厨房水管漏水，需要专业师傅上门维修，材料我方提供",
+    location: "海淀区",
+    pay_amount: 200,
+    required_skills: ["水电", "维修"],
+    job_time_start: "2024-01-16",
+    employer_name: "王女士",
+  },
+  {
+    id: "3",
+    title: "空调安装",
+    description: "新买的空调需要安装，3楼，需要自带工具",
+    location: "西城区",
+    pay_amount: 150,
+    required_skills: ["空调", "安装"],
+    job_time_start: "2024-01-17",
+    employer_name: "张先生",
+  },
+  {
+    id: "4",
+    title: "家具组装",
+    description: "宜家衣柜和书桌需要组装，预计2小时完成",
+    location: "东城区",
+    pay_amount: 180,
+    required_skills: ["家具", "组装"],
+    job_time_start: "2024-01-18",
+    employer_name: "赵女士",
+  },
+  {
+    id: "5",
+    title: "保洁服务",
+    description: "120平米新房开荒保洁，需要专业保洁师傅",
+    location: "丰台区",
+    pay_amount: 400,
+    required_skills: ["保洁", "清洁"],
+    job_time_start: "2024-01-19",
+    employer_name: "刘先生",
+  },
+  {
+    id: "6",
+    title: "电路检修",
+    description: "家里电路跳闸，需要师傅上门检查维修",
+    location: "通州区",
+    pay_amount: 250,
+    required_skills: ["电工", "维修"],
+    job_time_start: "2024-01-20",
+    employer_name: "陈女士",
+  },
+]
+
+const testimonials = [
+  {
+    id: 1,
+    role: "师傅",
+    name: "张师傅",
+    content: "在平台接单太方便了！上周接了3个搬家单，收入2000多，比以前到处找活强多了。",
+    rating: 5,
+  },
+  {
+    id: 2,
+    role: "雇主",
+    name: "李女士",
+    content: "家里水管漏水，在平台发布任务后10分钟就有师傅联系，专业又省心！",
+    rating: 5,
+  },
+  {
+    id: 3,
+    role: "师傅",
+    name: "王师傅",
+    content: "平台的资金托管让我很放心，干完活就能收到钱，不用担心被拖欠。",
+    rating: 5,
+  },
+  {
+    id: 4,
+    role: "雇主",
+    name: "陈先生",
+    content: "找师傅再也不用到处打听，平台上的师傅都有评分，选起来特别放心。",
+    rating: 5,
+  },
+  {
+    id: 5,
+    role: "师傅",
+    name: "刘师傅",
+    content: "注册简单，接单方便，一个月下来比以前多赚了不少，推荐给老乡们！",
+    rating: 5,
+  },
+  {
+    id: 6,
+    role: "雇主",
+    name: "赵女士",
+    content: "发布任务、选师傅、支付一气呵成，整个过程透明，再也不怕被坑了。",
+    rating: 5,
+  },
+]
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Header */}
       <header className="border-b bg-white/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -15,12 +122,6 @@ export default function Home() {
             <span className="text-xl font-bold">零工平台</span>
           </div>
           <div className="flex gap-4">
-            <Link href="/setup">
-              <Button variant="ghost" size="sm">
-                <FileText className="mr-2 h-4 w-4" />
-                设置指南
-              </Button>
-            </Link>
             <Link href="/auth/login">
               <Button variant="ghost">登录</Button>
             </Link>
@@ -31,31 +132,10 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Setup Notice */}
-      <div className="bg-amber-50 border-b border-amber-200">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-amber-800">
-              <Zap className="h-5 w-5" />
-              <span className="text-sm font-medium">
-                首次使用？需要完成快速配置才能使用完整功能
-              </span>
-            </div>
-            <Link href="/setup">
-              <Button size="sm" variant="outline" className="border-amber-300">
-                查看设置指南
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <Badge variant="secondary" className="mb-4">
-            零成本搭建 · 0 基础可用
+            简单四步 · 轻松撮合
           </Badge>
           <h1 className="text-5xl font-bold mb-6">
             连接雇主与师傅的
@@ -63,59 +143,109 @@ export default function Home() {
             <span className="text-primary">智能零工撮合平台</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            轻松发布任务，快速找到合适的师傅。支持实时通知，资金托管，
-            双向评价，让零工交易更简单、更安全。
+            雇主发布任务，师傅快速接单，平台资金托管，双向评价保障
           </p>
           <div className="flex gap-4 justify-center">
-            <Link href="/setup">
-              <Button size="lg" className="text-lg px-8" variant="default">
-                开始设置
+            <Link href="/auth/register">
+              <Button size="lg" className="text-lg px-8">
+                立即开始
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="#features">
-              <Button size="lg" variant="outline" className="text-lg px-8">
-               了解更多
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Setup Steps Preview */}
-      <section className="py-12 px-4 bg-gray-50">
+      <section className="py-16 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4">3 步快速启动</h2>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">最新任务</h2>
             <p className="text-muted-foreground">
-              完成简单配置，立即开始使用
+              浏览雇主发布的零工任务，找到合适的工作
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mockJobs.map((job) => (
+              <Card key={job.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="flex justify-between items-start gap-2">
+                    <CardTitle className="text-lg line-clamp-1">{job.title}</CardTitle>
+                    <Badge className="bg-green-100 text-green-700 shrink-0">待接单</Badge>
+                  </div>
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {job.required_skills.map((skill) => (
+                      <Badge key={skill} variant="secondary" className="text-xs">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                    {job.description}
+                  </p>
+                  <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-4">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="h-3 w-3" />
+                      <span>{job.location}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-green-600 font-medium">
+                      <span className="text-xs">¥</span>
+                      <span>{job.pay_amount}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      <span>{job.job_time_start}</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center pt-2 border-t">
+                    <span className="text-xs text-muted-foreground">
+                      {job.employer_name}
+                    </span>
+                    <Link href="/auth/register">
+                      <Button size="sm" variant="outline">查看详情</Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center mt-8">
+            <Link href="/auth/register">
+              <Button variant="outline" size="lg">
+                查看更多任务
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">四步完成零工撮合</h2>
+            <p className="text-muted-foreground">
+              简单流程，安全可靠
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-8">
             <Card className="relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-blue-500 text-white px-3 py-1 text-xs font-medium rounded-bl-lg">
                 步骤 1
               </div>
               <CardHeader>
-                <Database className="h-10 w-10 text-blue-500 mb-2" />
-                <CardTitle>运行数据库迁移</CardTitle>
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <Users className="h-6 w-6 text-blue-600" />
+                </div>
+                <CardTitle>注册账号</CardTitle>
+                <CardDescription>
+                  选择角色（雇主/师傅），完善个人信息
+                </CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  在 Supabase SQL Editor 中运行迁移脚本，创建所需的数据表
-                </p>
-                <a 
-                  href="https://supabase.com/dashboard" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  <Button size="sm" variant="outline">
-                    打开 Supabase
-                    <ExternalLink className="ml-2 h-4 w-4" />
-                  </Button>
-                </a>
-              </CardContent>
             </Card>
 
             <Card className="relative overflow-hidden">
@@ -123,208 +253,179 @@ export default function Home() {
                 步骤 2
               </div>
               <CardHeader>
-                <Users className="h-10 w-10 text-green-500 mb-2" />
-                <CardTitle>配置 GitHub OAuth</CardTitle>
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                  <Briefcase className="h-6 w-6 text-green-600" />
+                </div>
+                <CardTitle>发布/接任务</CardTitle>
+                <CardDescription>
+                  雇主发布任务需求，师傅浏览申请
+                </CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  启用第三方登录，无需邮箱验证，快速上手
-                </p>
-                <Link href="/setup">
-                  <Button size="sm" variant="outline">
-                    查看配置指南
-                  </Button>
-                </Link>
-              </CardContent>
+            </Card>
+
+            <Card className="relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-yellow-500 text-white px-3 py-1 text-xs font-medium rounded-bl-lg">
+                步骤 3
+              </div>
+              <CardHeader>
+                <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+                  <Shield className="h-6 w-6 text-yellow-600" />
+                </div>
+                <CardTitle>支付托管</CardTitle>
+                <CardDescription>
+                  雇主预付资金，平台托管保障双方
+                </CardDescription>
+              </CardHeader>
             </Card>
 
             <Card className="relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-purple-500 text-white px-3 py-1 text-xs font-medium rounded-bl-lg">
-                步骤 3
+                步骤 4
               </div>
               <CardHeader>
-                <Zap className="h-10 w-10 text-purple-500 mb-2" />
-                <CardTitle>开始使用！</CardTitle>
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                  <Star className="h-6 w-6 text-purple-600" />
+                </div>
+                <CardTitle>完成评价</CardTitle>
+                <CardDescription>
+                  任务完成，双向评价，平台分账
+                </CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  配置完成，返回注册账号，开始您的零工平台之旅
-                </p>
-                <Link href="/auth/register">
-                  <Button size="sm">
-                    立即注册
-                  </Button>
-                </Link>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">角色功能</h2>
+            <p className="text-muted-foreground">
+              为雇主和师傅提供专属功能
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-blue-500" />
+                  雇主
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Badge variant="outline">1</Badge>
+                  <span>发布零工任务需求</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Badge variant="outline">2</Badge>
+                  <span>查看师傅申请并选择</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Badge variant="outline">3</Badge>
+                  <span>预付资金到平台托管</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Badge variant="outline">4</Badge>
+                  <span>确认完成并评价师傅</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Briefcase className="h-5 w-5 text-green-500" />
+                  师傅
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Badge variant="outline">1</Badge>
+                  <span>浏览可接的零工任务</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Badge variant="outline">2</Badge>
+                  <span>申请感兴趣的任务</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Badge variant="outline">3</Badge>
+                  <span>完成任务获得报酬</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Badge variant="outline">4</Badge>
+                  <span>积累评分提升信誉</span>
+                </div>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-20 px-4">
+      <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">为什么选择我们</h2>
-            <p className="text-muted-foreground">
-              为独立开发者打造的零成本建站方案
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2">
+              <MessageCircle className="h-8 w-8" />
+              用户好评
+            </h2>
+            <p className="text-blue-100">
+              听听他们怎么说
             </p>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card>
-              <CardHeader>
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>快速上手</CardTitle>
-                <CardDescription>
-                  基于 Next.js + Supabase，最现代化的技术栈，让开发效率提升 10 倍
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>资金托管</CardTitle>
-                <CardDescription>
-                  平台代为托管款项，完成任务后再分账，杜绝跳单风险
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Users className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>实时撮合</CardTitle>
-                <CardDescription>
-                  支持实时通知，雇主发单、师傅申请、状态变更第一时间知晓
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">如何工作</h2>
-            <p className="text-muted-foreground">
-              简单的四步流程，完成零工撮合
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                1
-              </div>
-              <h3 className="font-semibold mb-2">注册账号</h3>
-              <p className="text-sm text-muted-foreground">
-                选择您的角色（雇主/师傅），完成注册
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                2
-              </div>
-              <h3 className="font-semibold mb-2">发布/接任务</h3>
-              <p className="text-sm text-muted-foreground">
-                雇主发布任务，师傅浏览并申请
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                3
-              </div>
-              <h3 className="font-semibold mb-2">支付托管</h3>
-              <p className="text-sm text-muted-foreground">
-                雇主预付资金，平台托管保障双方
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                4
-              </div>
-              <h3 className="font-semibold mb-2">完成评价</h3>
-              <p className="text-sm text-muted-foreground">
-                任务完成，互评打分，平台分账
-              </p>
+          
+          <div className="relative">
+            <div className="flex gap-6 animate-scroll">
+              {[...testimonials, ...testimonials].map((item, index) => (
+                <Card key={`${item.id}-${index}`} className="min-w-[320px] bg-white/10 backdrop-blur-sm border-white/20 text-white shrink-0">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        {item.role === "师傅" ? (
+                          <Briefcase className="h-5 w-5" />
+                        ) : (
+                          <Users className="h-5 w-5" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-xs text-blue-200">{item.role}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-1 mb-3">
+                      {[...Array(item.rating)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
+                    <p className="text-sm text-blue-100 line-clamp-3">"{item.content}"</p>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Tech Stack */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">技术栈</h2>
-            <p className="text-muted-foreground">
-              使用业界领先的技术，打造高性能应用
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {[
-              "Next.js 14",
-              "Supabase",
-              "TypeScript",
-              "Tailwind CSS",
-              "shadcn/ui",
-              "Vercel",
-            ].map((tech) => (
-              <div
-                key={tech}
-                className="flex items-center gap-3 p-4 bg-white rounded-lg border"
-              >
-                <CheckCircle className="h-5 w-5 text-green-500" />
-                <span className="font-medium">{tech}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
       <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">准备好开始了吗？</h2>
           <p className="text-muted-foreground mb-8">
-            完成 3 步配置，立即开始使用您的零工平台！
+            立即注册，开始您的零工之旅
           </p>
-          <Link href="/setup">
+          <Link href="/auth/register">
             <Button size="lg" className="text-lg px-8">
-              <Zap className="mr-2 h-5 w-5" />
-              开始设置
+              <Play className="mr-2 h-5 w-5" />
+              立即开始
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="border-t py-8 px-4">
         <div className="max-w-7xl mx-auto text-center text-muted-foreground">
-          <p>&copy; 2024 零工平台. 基于 Next.js + Supabase 构建。</p>
-          <div className="flex justify-center gap-4 mt-4">
-            <Link href="/setup" className="text-sm hover:underline">
-              设置指南
-            </Link>
-            <Link href="/diagnose" className="text-sm hover:underline">
-              诊断工具
-            </Link>
-          </div>
+          <p>&copy; 2024 零工平台</p>
         </div>
       </footer>
     </div>

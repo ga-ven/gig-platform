@@ -110,11 +110,13 @@ export default function RegisterPage() {
                 onValueChange={(value) => setRole(value as "employer" | "worker")}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="选择您的角色" />
+                  <SelectValue>
+                    {role === "worker" ? "师傅" : "雇主"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="worker">我是师傅（提供服务）</SelectItem>
-                  <SelectItem value="employer">我是雇主（发布任务）</SelectItem>
+                  <SelectItem value="worker">师傅</SelectItem>
+                  <SelectItem value="employer">雇主</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
